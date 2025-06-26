@@ -25,6 +25,11 @@ const App: React.FC = () => {
           console.log('Login successful:', data);
           // Store token for other API calls
           sessionStorage.setItem('access_token', data.access_token);
+        } else {
+          const errorText = await response.text();
+          console.error('Login failed:', response.status, errorText);
+          // Store empty token to avoid further login attempts
+          sessionStorage.setItem('access_token', '');
         }
       } catch (error) {
         console.error('Login failed:', error);
