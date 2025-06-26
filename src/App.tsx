@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { GLOBALS } from './globals';
 import Frontpage from './routes/Frontpage';
 import Books from './routes/BooksPage';
 import Borrowings from './routes/BorrowingsPage';
@@ -7,6 +8,46 @@ import Clients from './routes/ClientsPage';
 import Navbar from './components/Navbar';
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const login = async () => {
+      try {
+        // Auto-login with hardcoded password
+        const response = await fetch(`${GLOBALS.API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: 'password2' })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Login successful:', data);
+          // Store token for other API calls
+          localStorage.setItem('access_token', data.access_token);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error('Login failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    login();
+  }, []);
+
+  // Show loading screen while authenticating
+  if (loading) {
+    return <div>Authenticating...</div>;
+  }
+
+  // Show error if not authenticated
+  if (!isAuthenticated) {
+    return <div>Authentication failed. Please refresh the page.</div>;
+  }
+
   return (
     <Router>
       <div className="app">
@@ -16,7 +57,6 @@ const App: React.FC = () => {
           <Route path="/books" element={<Books />} />
           <Route path="/borrowings" element={<Borrowings />} />
           <Route path="/clients" element={<Clients />} />
-          {/* Add other routes as needed */}
         </Routes>
       </div>
     </Router>

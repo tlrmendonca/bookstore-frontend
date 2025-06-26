@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000';
+import { GLOBALS } from '../globals';
 
 export interface Client {
   _id: string;
@@ -11,7 +11,14 @@ export interface Client {
 
 export const clientAPI = {
   async getClients(): Promise<Client[]> {
-    const response = await fetch(`${API_BASE}/clients`);
+    const token = localStorage.getItem('access_token');
+    
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/clients`, {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+    });
+    
     if (!response.ok) {
       const errorText = await response.text();
       console.log('GET error:', response.status, errorText);
@@ -21,7 +28,7 @@ export const clientAPI = {
   },
 
   async createClient(client: Omit<Client, '_id'>): Promise<Client> {
-    const response = await fetch(`${API_BASE}/clients/`, {
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/clients/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(client)
@@ -35,7 +42,7 @@ export const clientAPI = {
   },
 
   async deleteClient(clientId: string): Promise<void> {
-    const response = await fetch(`${API_BASE}/clients/${clientId}`, {
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/clients/${clientId}`, {
       method: 'DELETE'
     });
     if (!response.ok) throw new Error('Failed to delete client');
