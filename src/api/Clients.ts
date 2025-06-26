@@ -11,12 +11,12 @@ export interface Client {
 
 export const clientAPI = {
   async getClients(): Promise<Client[]> {
-    const token = localStorage.getItem('access_token');
+    const token = sessionStorage.getItem('access_token');
     
     const response = await fetch(`${GLOBALS.API_BASE_URL}/clients`, {
-      headers: {
+      headers: token ? {
           'Authorization': `Bearer ${token}`
-      }
+      } : {}
     });
     
     if (!response.ok) {

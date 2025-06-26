@@ -55,7 +55,7 @@ const Table: React.FC<TableProps> = ({ columns, data, actions, loading }) => {
                 colSpan={columns.length + (actions?.length ? 1 : 0)} 
                 style={{ padding: '2rem', textAlign: 'center', color: 'black' }}
               >
-                No books found
+                No data found
               </td>
             </tr>
           ) : (

@@ -8,7 +8,6 @@ import Clients from './routes/ClientsPage';
 import Navbar from './components/Navbar';
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,8 +24,7 @@ const App: React.FC = () => {
           const data = await response.json();
           console.log('Login successful:', data);
           // Store token for other API calls
-          localStorage.setItem('access_token', data.access_token);
-          setIsAuthenticated(true);
+          sessionStorage.setItem('access_token', data.access_token);
         }
       } catch (error) {
         console.error('Login failed:', error);
@@ -41,11 +39,6 @@ const App: React.FC = () => {
   // Show loading screen while authenticating
   if (loading) {
     return <div>Authenticating...</div>;
-  }
-
-  // Show error if not authenticated
-  if (!isAuthenticated) {
-    return <div>Authentication failed. Please refresh the page.</div>;
   }
 
   return (
