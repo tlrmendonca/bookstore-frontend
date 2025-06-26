@@ -10,6 +10,8 @@ npm run dev
 
 2. General application logic doesn't make much sense at all.
 
+3. Auto login and simple authentication exists, although basically invisible and instant. To test: change hardcoded password in `App.tsx` file.
+
 ### Structure:
 ```
 /src/

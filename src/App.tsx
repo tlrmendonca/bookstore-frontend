@@ -18,7 +18,7 @@ const App: React.FC = () => {
         const response = await fetch(`${GLOBALS.API_BASE_URL}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: 'password2' })
+          body: JSON.stringify({ password: 'password' })
         });
 
         if (response.ok) {

@@ -91,10 +91,6 @@ const Clients: React.FC = () => {
     fetchClients();
   }, []);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
   const columns: TableColumn[] = [
     { key: 'first_name', header: 'First Name', width: '20%' },
     { key: 'last_name', header: 'Last Name', width: '20%' },
