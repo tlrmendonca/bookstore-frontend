@@ -8,6 +8,8 @@ npm run dev
 
 1. Components are 98% AI generated and not at all efficient in terms of sheer number of files (made in batches).
 
+2. General application logic doesn't make much sense at all.
+
 ### Structure:
 ```
 /src/
@@ -23,9 +25,6 @@ npm run dev
 ├── routes/
 │   ├── Frontpage.tsx
 │   └── Frontpage.css
-├── services/
-│   ├── api.js
-│   └── bookService.js
 ├── App.tsx
 ├── globals.js
 └── main.tsx
