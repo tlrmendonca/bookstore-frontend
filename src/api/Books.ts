@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000';
+import { GLOBALS } from '../globals';
 
 export interface Book {
   _id: string;
@@ -12,7 +12,7 @@ export interface Book {
 
 export const bookAPI = {
   async getBooks(): Promise<Book[]> {
-    const response = await fetch(`${API_BASE}/books`);
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/books`);
     if (!response.ok) {
       const errorText = await response.text();
       console.log('GET error:', response.status, errorText);
@@ -22,7 +22,7 @@ export const bookAPI = {
   },
 
   async createBook(book: Omit<Book, '_id'>): Promise<Book> {
-    const response = await fetch(`${API_BASE}/books/`, {
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/books/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(book)
@@ -36,7 +36,7 @@ export const bookAPI = {
   },
 
   async deleteBook(bookId: string): Promise<void> {
-    const response = await fetch(`${API_BASE}/books/${bookId}`, {
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/books/${bookId}`, {
       method: 'DELETE'
     });
     if (!response.ok) throw new Error('Failed to delete book');

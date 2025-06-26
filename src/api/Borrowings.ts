@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000';
+import { GLOBALS } from '../globals';
 
 export interface Borrowing {
   _id: string;
@@ -14,7 +14,7 @@ export interface Borrowing {
 
 export const borrowingAPI = {
   async getBorrowings(): Promise<Borrowing[]> {
-    const response = await fetch(`${API_BASE}/borrowings`);
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/borrowings`);
     if (!response.ok) {
       const errorText = await response.text();
       console.log('GET error:', response.status, errorText);
@@ -24,7 +24,7 @@ export const borrowingAPI = {
   },
 
   async createBorrowing(borrowing: Omit<Borrowing, '_id'>): Promise<Borrowing> {
-    const response = await fetch(`${API_BASE}/borrowings/`, {
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/borrowings/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(borrowing)
@@ -38,7 +38,7 @@ export const borrowingAPI = {
   },
 
   async deleteBorrowing(borrowingId: string): Promise<void> {
-    const response = await fetch(`${API_BASE}/borrowings/${borrowingId}`, {
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/borrowings/${borrowingId}`, {
       method: 'DELETE'
     });
     if (!response.ok) throw new Error('Failed to delete borrowing');

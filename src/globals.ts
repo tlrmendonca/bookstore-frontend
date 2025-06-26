@@ -20,5 +20,6 @@ export const GLOBALS = {
   },
   fonts: {
     primary: 'system-ui, -apple-system, sans-serif',
-  }
+  },
+  API_BASE_URL: 'http://localhost:8000',
 };
