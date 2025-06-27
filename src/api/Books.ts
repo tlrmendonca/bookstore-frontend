@@ -12,13 +12,27 @@ export interface Book {
 
 export const bookAPI = {
   async getBooks(): Promise<Book[]> {
-    const response = await fetch(`${GLOBALS.API_BASE_URL}/books`);
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log('GET error:', response.status, errorText);
-      throw new Error(`Failed to fetch books: ${response.status}`);
+    let allBooks: Book[] = [];
+    let cursor: string | null = null;
+
+    while(true) {
+        const response = await fetch(
+            `${GLOBALS.API_BASE_URL}/books/?${cursor ? `cursor=${cursor}&` : ''}limit=20`
+        )
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to fetch books: ${response.status}\n${errorText}`);
+        }
+
+        const data = await response.json();
+        allBooks = [...allBooks, ...data.books];
+
+        if (!data.has_more) break;
+        cursor = data.next_cursor;
     }
-    return response.json();
+
+    console.log('Final result:', allBooks);
+    return allBooks;
   },
 
   async createBook(book: Omit<Book, '_id'>): Promise<Book> {
