@@ -14,7 +14,7 @@ export interface Borrowing {
 
 export const borrowingAPI = {
   async getBorrowings(): Promise<Borrowing[]> {
-    const response = await fetch(`${GLOBALS.API_BASE_URL}/borrowings`);
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/borrowings/`);
     if (!response.ok) {
       const errorText = await response.text();
       console.log('GET error:', response.status, errorText);
@@ -42,5 +42,16 @@ export const borrowingAPI = {
       method: 'DELETE'
     });
     if (!response.ok) throw new Error('Failed to delete borrowing');
+  },
+
+  async returnBorrowing(borrowingId: string): Promise<Borrowing> {
+    console.log('Returning borrowing with ID:', borrowingId);
+    const response = await fetch(`${GLOBALS.API_BASE_URL}/borrowings/return/${borrowingId}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log('Return error:', response.status, errorText);
+      throw new Error(`Failed to return borrowing: ${response.status}`);
+    }
+    return response.json();
   }
 };

@@ -47,6 +47,22 @@ const Borrowings: React.FC = () => {
     }
   };
 
+  const handleReturnBorrowing = async (borrowing: Borrowing) => {
+    // Only allow return for active and overdue borrowings
+    if (borrowing.status !== 'active' && borrowing.status !== 'overdue') {
+      return;
+    }
+    
+    try {
+      const updatedBorrowing = await borrowingAPI.returnBorrowing(borrowing._id);
+      setBorrowings(borrowings.map(b => 
+        b._id === borrowing._id ? updatedBorrowing : b
+      ));
+    } catch (err) {
+      console.error('Error returning borrowing:', err);
+    }
+  };
+
   const handleAddBorrowing = async (formData: Omit<Borrowing, '_id'>) => {
     setFormLoading(true);
     try {
@@ -96,16 +112,21 @@ const Borrowings: React.FC = () => {
   };
 
   const columns: TableColumn[] = [
-    { key: 'borrower_id', header: 'Borrower ID', width: '15%' },
-    { key: 'source_type', header: 'Source Type', width: '12%' },
-    { key: 'source_id', header: 'Source ID', width: '15%' },
-    { key: 'book_id', header: 'Book ID', width: '15%' },
-    { key: 'borrow_date', header: 'Borrow Date', width: '13%' },
-    { key: 'due_date', header: 'Due Date', width: '13%' },
-    { key: 'status', header: 'Status', width: '17%' }
+    { key: 'borrower_id', header: 'Borrower ID', width: '14%' },
+    { key: 'source_type', header: 'Source Type', width: '10%' },
+    { key: 'source_id', header: 'Source ID', width: '12%' },
+    { key: 'book_id', header: 'Book ID', width: '12%' },
+    { key: 'borrow_date', header: 'Borrow Date', width: '11%' },
+    { key: 'due_date', header: 'Due Date', width: '11%' },
+    { key: 'statusDisplay', header: 'Status', width: '14%' }
   ];
 
   const actions: TableAction[] = [
+    {
+      label: 'Return',
+      onClick: handleReturnBorrowing,
+      className: 'return'
+    },
     {
       label: 'Delete',
       onClick: handleDeleteBorrowing,
@@ -114,12 +135,16 @@ const Borrowings: React.FC = () => {
   ];
 
   // Format data for table display
-  const tableData = borrowings.map(borrowing => ({
-    ...borrowing,
-    borrow_date: formatDate(borrowing.borrow_date),
-    due_date: formatDate(borrowing.due_date),
-    status: borrowing.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
-  }));
+  const tableData = borrowings.map(borrowing => {
+    const isReturned = borrowing.status === 'returned' || borrowing.status === 'returned_overdue';
+    return {
+      ...borrowing,
+      borrow_date: formatDate(borrowing.borrow_date),
+      due_date: formatDate(borrowing.due_date),
+      statusDisplay: borrowing.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()), // Display version only
+      canReturn: !isReturned
+    };
+  });
 
   return (
     <div className="borrowings-page">
@@ -139,6 +164,7 @@ const Borrowings: React.FC = () => {
             columns={columns}
             data={tableData}
             actions={actions}
+            actionCount={2}
             loading={loading}
           />
         </div>

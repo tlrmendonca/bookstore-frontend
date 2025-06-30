@@ -4,12 +4,14 @@
   border: 1px solid #e5e7eb;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
+  table-layout: fixed;
 }
 
 .table-header {
@@ -84,6 +86,30 @@
 .table-action-button.delete:hover {
   background-color: #fee2e2;
   border-color: #dc2626;
+}
+
+.table-action-button.return {
+  color: #06b6d4;
+  border-color: #06b6d4;
+}
+
+.table-action-button.return:hover {
+  background-color: #ecfeff;
+  border-color: #06b6d4;
+}
+
+.table-action-button.return.disabled {
+  color: #9ca3af;
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+  cursor: not-allowed;
+}
+
+.table-action-button.return.disabled:hover {
+  color: #9ca3af;
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
 }
 
 .table-loading {

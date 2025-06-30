@@ -18,9 +18,11 @@ interface TableProps {
   data: any[];
   actions?: TableAction[];
   loading?: boolean;
+  actionCount?: number; // Number of action buttons expected, default 1
 }
 
-const Table: React.FC<TableProps> = ({ columns, data, actions, loading }) => {
+const Table: React.FC<TableProps> = ({ columns, data, actions, loading, actionCount = 1 }) => {
+  const actionsWidth = `${actionCount * 8}%`;
   if (loading) {
     return (
       <div className="table-loading">
@@ -44,7 +46,7 @@ const Table: React.FC<TableProps> = ({ columns, data, actions, loading }) => {
               </th>
             ))}
             {actions && actions.length > 0 && (
-              <th className="table-header-cell">Actions</th>
+              <th className="table-header-cell" style={{ width: actionsWidth }}>Actions</th>
             )}
           </tr>
         </thead>
@@ -69,15 +71,24 @@ const Table: React.FC<TableProps> = ({ columns, data, actions, loading }) => {
                 {actions && actions.length > 0 && (
                   <td className="table-cell">
                     <div className="table-actions">
-                      {actions.map((action, actionIndex) => (
-                        <button
-                          key={actionIndex}
-                          onClick={() => action.onClick(row)}
-                          className={`table-action-button ${action.className || ''}`}
-                        >
-                          {action.label}
-                        </button>
-                      ))}
+                      {actions.map((action, actionIndex) => {
+                        const isReturnButton = action.className?.includes('return');
+                        const isDisabled = isReturnButton && !row.canReturn;
+                        const buttonClass = isDisabled 
+                          ? `table-action-button ${action.className} disabled`
+                          : `table-action-button ${action.className || ''}`;
+                        const buttonText = isReturnButton && isDisabled ? 'Returned' : action.label;
+                        
+                        return (
+                          <button
+                            key={actionIndex}
+                            onClick={() => !isDisabled && action.onClick(row)}
+                            className={buttonClass}
+                          >
+                            {buttonText}
+                          </button>
+                        );
+                      })}
                     </div>
                   </td>
                 )}
